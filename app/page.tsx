@@ -16,7 +16,7 @@ export default function Home() {
   const filters = useStore((state) => state.filters);
 
   useEffect(() => {
-    fetch('/api/products')
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/products`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);

@@ -99,7 +99,7 @@ describe('SearchBar', () => {
     fireEvent.change(searchInput, { target: { value: 'he' } });
     
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith('/api/products?query=he');
+      expect(global.fetch).toHaveBeenCalledWith(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/products?query=he`);
     });
   });
 

@@ -26,7 +26,7 @@ export function SearchBar() {
     const delayDebounceFn = setTimeout(() => {
       if (searchQuery.trim().length >= 1) {
         setIsSearching(true);
-        fetch(`/api/products/search?query=${encodeURIComponent(searchQuery)}`)
+        fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/products/search?query=${encodeURIComponent(searchQuery)}`)
           .then(res => res.json())
           .then(data => {
             setSearchResults(data);
