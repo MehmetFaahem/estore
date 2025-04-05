@@ -9,17 +9,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import ProductClient from './ProductClient';
 
-// Export generateStaticParams function for static site generation
-export async function generateStaticParams() {
-  // Fetch all products to get their IDs
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/products`);
-  const products = await res.json();
-  
-  // Return an array of objects with the id parameter
-  return products.map((product: Product) => ({
-    id: product.id,
-  }));
-}
+// Import generateStaticParams from dedicated file
+export { generateStaticParams } from './generateStaticParams';
+
 
 // This is a server component that fetches data
 async function getProduct(id: string) {
