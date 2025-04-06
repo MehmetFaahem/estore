@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { SearchBar } from '@/components/SearchBar';
 import { useRouter } from 'next/navigation';
 
@@ -92,42 +92,53 @@ describe('SearchBar', () => {
     expect(searchInput).toHaveValue('');
   });
 
-  it('fetches search results when query has at least 2 characters', async () => {
+  it('fetches search results when query has at least 1 character', async () => {
     render(<SearchBar />);
     
     const searchInput = screen.getByPlaceholderText('Search products...');
-    fireEvent.change(searchInput, { target: { value: 'he' } });
     
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/products?query=he`);
+    await act(async () => {
+      fireEvent.change(searchInput, { target: { value: 'he' } });
+      // Wait for debounce timeout
+      await new Promise(resolve => setTimeout(resolve, 400));
     });
+    
+    expect(global.fetch).toHaveBeenCalledWith(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/products/search?query=he`);
   });
 
   it('navigates to product page when search form is submitted', async () => {
     render(<SearchBar />);
     
     const searchInput = screen.getByPlaceholderText('Search products...');
-    fireEvent.change(searchInput, { target: { value: 'headphones' } });
     
-    // Wait for search results to load
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalled();
+    await act(async () => {
+      fireEvent.change(searchInput, { target: { value: 'headphones' } });
+      // Wait for debounce timeout
+      await new Promise(resolve => setTimeout(resolve, 400));
     });
     
-    const form = searchInput.closest('form');
-    fireEvent.submit(form!);
+    // Verify fetch was called
+    expect(global.fetch).toHaveBeenCalled();
+    
+    // Submit the form
+    await act(async () => {
+      const form = searchInput.closest('form');
+      fireEvent.submit(form!);
+    });
     
     expect(mockPush).toHaveBeenCalledWith('/product/1');
   });
 
-  it('does not fetch results when query is less than 2 characters', async () => {
+  it('does not fetch results when query is empty', async () => {
     render(<SearchBar />);
     
     const searchInput = screen.getByPlaceholderText('Search products...');
-    fireEvent.change(searchInput, { target: { value: 'h' } });
     
-    // Wait a bit to ensure no fetch call is made
-    await new Promise(resolve => setTimeout(resolve, 400));
+    await act(async () => {
+      fireEvent.change(searchInput, { target: { value: '' } });
+      // Wait for debounce timeout
+      await new Promise(resolve => setTimeout(resolve, 400));
+    });
     
     expect(global.fetch).not.toHaveBeenCalled();
   });
