@@ -3,6 +3,7 @@
 import { useStore } from '@/lib/store';
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetHeader,
@@ -14,6 +15,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { ShoppingCart, Minus, Plus, Trash2 } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export function Cart() {
   const { cart, updateQuantity, removeFromCart } = useStore((state) => ({
@@ -21,6 +23,7 @@ export function Cart() {
     updateQuantity: state.updateQuantity,
     removeFromCart: state.removeFromCart,
   }));
+
 
   return (
     <Sheet>
@@ -43,50 +46,61 @@ export function Cart() {
               : `${cart.items.length} item(s) in your cart`}
           </SheetDescription>
         </SheetHeader>
-        <div className="h-[70%] mt-4 overflow-y-scroll pb-10 max-md:pb-20">
-          {cart.items.map((item) => (
-            <div key={item.id} className="flex gap-4 py-4">
-              <div className="relative aspect-square h-24 w-24 rounded-lg overflow-hidden">
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-medium">{item.name}</h3>
-                <p className="text-sm text-muted-foreground">${item.price.toFixed(2)}</p>
-                <div className="flex items-center gap-2 mt-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <span>{item.quantity}</span>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    size="icon"
-                    onClick={() => removeFromCart(item.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+        <div className="h-[70%] mt-4 overflow-y-scroll pb-[25%] max-md:pb-20">
+          {cart.items.length > 0 ? (
+            cart.items.map((item) => (
+              <div key={item.id} className="flex gap-4 py-4">
+                <div className="relative aspect-square h-24 w-24 rounded-lg overflow-hidden">
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-medium">{item.name}</h3>
+                  <p className="text-sm text-muted-foreground">${item.price.toFixed(2)}</p>
+                  <div className="flex items-center gap-2 mt-2">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                    >
+                      <Minus className="h-4 w-4" />
+                    </Button>
+                    <span>{item.quantity}</span>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="icon"
+                      onClick={() => removeFromCart(item.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
+            ))
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full">
+              <ShoppingCart className="h-32 w-32 mx-auto text-muted-foreground mb-4" />
+              <h2 className="text-2xl font-semibold mb-2">Your cart is empty</h2>
+              <p className="text-muted-foreground mb-6 text-center">Add some products to your cart to see them here</p>
+              <SheetClose>
+                <Button variant="outline">Shop Now</Button>
+              </SheetClose>
             </div>
-          ))}
+          )}
         </div>
         {cart.items.length > 0 && (
-          <div className="mt-4 absolute bottom-8 w-[90%] bg-white">
+          <div className="mt-4 absolute bottom-8 w-[91%] bg-white">
             <Separator className="my-4" />
             {cart.discountedTotal !== undefined && cart.discountedTotal < cart.total ? (
               <>

@@ -8,6 +8,8 @@ import { ProductFilters } from '@/components/ProductFilters';
 import { Cart } from '@/components/Cart';
 import { SearchBar } from '@/components/SearchBar';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+import { ShoppingCart } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Home() {
@@ -92,7 +94,7 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-            ) : (
+            ) : filteredProducts.length > 0 ? (
               <>
                 <p className="mb-4 text-muted-foreground">
                   {filteredProducts.length} products found
@@ -110,6 +112,32 @@ export default function Home() {
                   ))}
                 </div>
               </>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-[50vh]">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5 }}
+                  className="text-center"
+                >
+                  <ShoppingCart className="h-32 w-32 mx-auto text-muted-foreground mb-4" />
+                  <h2 className="text-2xl font-semibold mb-2">No products found</h2>
+                  <p className="text-muted-foreground mb-6">Try adjusting your filters or search criteria</p>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => useStore.getState().setFilters({
+                      category: '',
+                      minPrice: 0,
+                      maxPrice: 1000,
+                      inStock: null,
+                      sortBy: 'name-asc',
+                      searchQuery: ''
+                    })}
+                  >
+                    Reset all filters
+                  </Button>
+                </motion.div>
+              </div>
             )}
           </div>
         </div>
