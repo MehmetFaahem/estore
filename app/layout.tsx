@@ -24,7 +24,7 @@ export default function RootLayout({
       <header className="border-b fixed w-full bg-white z-[1000]">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Link href={'/'}><h1 className="text-2xl font-bold cursor-pointer">Store</h1></Link>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 ml-4">
             <SearchBar />
             <Cart />
           </div>

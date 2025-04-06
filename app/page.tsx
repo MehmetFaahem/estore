@@ -69,7 +69,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b fixed w-full bg-white z-[1000]">
+      {/* <header className="border-b fixed w-full bg-white z-[1000]">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold">Store</h1>
           <div className="flex items-center gap-4">
@@ -77,7 +77,7 @@ export default function Home() {
             <Cart />
           </div>
         </div>
-      </header>
+      </header> */}
       <main className="container mx-auto px-4 py-28 z-[500]">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <aside className="md:col-span-1">
